@@ -1,104 +1,120 @@
-const resultEl =
-    document.getElementById('result');
-    const lengthEl =
-    document.getElementById('length');
-    const upperCaseEl =
-    document.getElementById('uppercase');
-    const lowerCaseEl =
-    document.getElementById('lowercase');
-    const numbersEl =
-    document.getElementById('numbers');
-    const  symbolsEl =
-    document.getElementById('symbols');
-    const generateEl =
-    document.getElementById('generate');
-    const clipboard =
-    document.getElementById('clipboard');    
+console.log("Ejercicios funcionesII");
+console.log("Ejercicio I: Caducidad de un producto");
 
-
-    const randomFunc ={
-        lower:getRandomLower,
-        upper:getRandomUpper,
-        number:getRandomNumber,
-        symbol:getRandomSymbol
-    }
-
-
-
-    clipboard.addEventListener('click', () => {
-        const textarea = document.createElement('textarea');
-        const password = resultEl.innerText;
-        
-        if(!password) { return; }
-        
-        textarea.value = password;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        textarea.remove();
-        alert('Password copied to clipboard');
-    });
-
-    
-    generate.addEventListener('click', () => {
-        const length = + lengthEl.value;
-        const hasLower = lowerCaseEl.checked;
-        const hasUpper = upperCaseEl.checked;
-        const hasNumber = numbersEl.checked;
-        const hasSymbol = symbolsEl.checked;
-        
-        resultEl.innerText = generatePassword(hasLower, hasUpper, hasNumber, hasSymbol, length);
-    });
-
-
-    function generatePassword(lower, upper, number, symbol, length) {
-        let generatedPassword = '';
-        const typesCount = lower + upper + number + symbol;
-        const typesArr = [{lower}, {upper}, {number}, {symbol}].filter(item => Object.values(item)[0]);
-        
-
-        // Doesn't have a selected type
-        if(typesCount === 0) {
-            return '';
+let myProduct = {
+    name:"milk",
+    year: 2021,
+    getDateForRootenStatus: function (year) {
+        let status = true;
+        if(this.year<2023){
+        }else{
+            status=false;
         }
-        
-        // create a loop
-        for(let i=0; i<length; i+=typesCount) {
-            typesArr.forEach(type => {
-                const funcName = Object.keys(type)[0];
-                generatedPassword += randomFunc[funcName]();
-            });
+        return status;
+      },
+};
+
+let myProductII = {
+    name:"Dairy",
+    year: 2024,
+    getDateForRootenStatus: function (year) {
+        let status = true;
+        if(this.year<2023){
+        }else{
+            status=false;
         }
-        
-        const finalPassword = generatedPassword.slice(0, length);
-        console.log(finalPassword);
+        return status;
+      },
+};
 
 
-        return finalPassword;
+function isRootten(status, name){
+    let answer ='';
+    switch(status){
+        case false:
+            answer ="El producto " + name +" esta fresco";
+            break;
+        case true:
+            answer ="El producto " + name +" esta caduco";
+            break; 
+        default:
+            answer ="El producto no tiene fecha de caducidad"
+
     }
-    
+    return answer;
+}
+
+let test = isRootten(myProductII.getDateForRootenStatus(this.year),myProductII.name);
+let testII = isRootten(myProduct.getDateForRootenStatus(this.year),myProduct.name);
+
+console.log(test);
+console.log(testII);
 
 
-    function getRandomLower() {
-        return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+
+console.log("")
+console.log("Ejercicio II: Mostrar Descripcion de un auto");
+
+let car={
+    name: "Sentra",
+    company:"Nissan",
+    year:2018,
+    airconditioning:true
+}
+
+let carII={
+    name: "Volvo V90",
+    company:"Volvo",
+    year:2023,
+    airconditioning:false
+}
+
+
+
+function showCar(name,company,year,airconditioning){
+    let anser ='';
+    if (airconditioning === true){
+        anser ="the  car´s name is " + name + " its company is " + company + " and its from the year " + year + " and it has airconditioning";
+    }else{
+        anser ="the  car´s name is " + name + " its company is " + company + " and its from the year " + year + " and it does no have airconditioning";
     }
-    
-    function getRandomUpper() {
-        return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-    }
-    
 
-    function getRandomNumber(){
-        let random = String.fromCharCode(Math.floor(Math.random()*10) +48);
+    return anser;
+}
 
-        return random;
-        
-    }
+let testea = showCar(car.name,car.company,car.year,car.airconditioning);
+let testeaII = showCar(carII.name,carII.company,carII.year,carII.airconditioning);
+
+console.log(testea);
+console.log(testeaII);
 
 
-    function getRandomSymbol(){
-        const symbols = '!#$%&/(){}*+-?¡¿=<>,.|°';
-        return symbols[Math.floor(Math.random()*symbols.length)];
-    }
+console.log("")
+console.log("Ejercicio III: Fecha del album");
 
 
+let band ={
+    name: "Queen",
+    album:"Jazz",
+    year:1978
+}
+
+let bandII ={
+    name: "maná",
+    album:"amar es combatir",
+    year:2006
+}
+
+function beholdAlbum(name,album,year){
+    let period = 2023 - year;
+
+    return `the album ${album}, of the  band ${name}   was released on ${year}  and it has been ${period} years since its recording`;
+}
+
+
+let resultSet = beholdAlbum(band.name,band.album, band.year);
+let resultSetII = beholdAlbum(bandII.name,bandII.album, bandII.year);
+
+
+console.log(resultSet);
+console.log(resultSetII);
