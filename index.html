@@ -6,59 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style\bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style\style.css">
 
-
-    <title>BookList App</title>
+    <title>Password generator</title>
 </head>
 <body>
-
-    <div class="container mt-4">
-        <h1 class="display-4 text-center">
-            <i class="fas fa-book-open text-primary"></i>
-            My
-            <span class="text-primary">
-            Book
-            </span>
-            List
-        </h1>
-
-        <form id="book-form">
-            <div class="form-group">
-               <label for="title">Title</label> 
-               <input type="text" id="title" class="form-control">
+    <div class="container">
+        <h2>Password Generator</h2>
+        <div class="result-container">
+            <span id="result"></span>
+            <button class="btn" id="clipboard">
+                <i class="far fa-clipboard"></i>
+            </button>
+        </div>
+        <div class="settings">
+            <div class="setting">
+                <label>Password length</label>
+                <input type="number" id="length" min='4' max='20' value='20' />
             </div>
-            <div class="form-group">
-                <label for="author">Author</label> 
-                <input type="text" id="author" class="form-control">
-             </div>
-             <div class="form-group">
-                <label for="isbn">ISBN#</label> 
-                <input type="text" id="isbn" class="form-control">
-             </div>
-
-            <br> 
-            <input type="submit" value="add Books"
-             class="btn btn-primary btn-block" >
-        </form>
-
-        <table class="table table-striped mt-4">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Isbn</th>
-                </tr>
-            </thead>
-
-            <tbody id="book-list">
-
-            </tbody>
-
-        </table>
-
+            <div class="setting">
+                <label>Include uppercase letters</label> 
+                <input type="checkbox" id="uppercase" checked />
+            </div>
+            <div class="setting">
+                <label>Include lowercase letters</label> 
+                <input type="checkbox" id="lowercase" checked />
+            </div>
+            <div class="setting">
+                <label>Include numbers</label> 
+                <input type="checkbox" id="numbers" checked />
+            </div>
+            <div class="setting">
+                <label>Include symbols</label> 
+                <input type="checkbox" id="symbols" checked />
+            </div>
+        </div>
+        <button class="btn btn-large" id="generate">
+            Generate password
+        </button>
     </div>
     
-
-    <script src="js\script.js"></script>
+    
+    
+    
+    
+       
+       
+        <script src="js\script.js"></script>
 </body>
 </html>

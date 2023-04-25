@@ -1,159 +1,104 @@
-//Book class constructor of a book
-class Book{
-    constructor(title,author,isbn){
-        this.title=title;
-        this.author=author;
-        this.isbn=isbn;
+const resultEl =
+    document.getElementById('result');
+    const lengthEl =
+    document.getElementById('length');
+    const upperCaseEl =
+    document.getElementById('uppercase');
+    const lowerCaseEl =
+    document.getElementById('lowercase');
+    const numbersEl =
+    document.getElementById('numbers');
+    const  symbolsEl =
+    document.getElementById('symbols');
+    const generateEl =
+    document.getElementById('generate');
+    const clipboard =
+    document.getElementById('clipboard');    
+
+
+    const randomFunc ={
+        lower:getRandomLower,
+        upper:getRandomUpper,
+        number:getRandomNumber,
+        symbol:getRandomSymbol
     }
-}
 
 
 
-//User Interface
-class UI{
-    static displayBooks(){
+    clipboard.addEventListener('click', () => {
+        const textarea = document.createElement('textarea');
+        const password = resultEl.innerText;
         
-        const books =Store.getBooks();
-        books.forEach((Book) => UI.addBookToList(Book));
+        if(!password) { return; }
+        
+        textarea.value = password;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+        alert('Password copied to clipboard');
+    });
 
-    }
+    
+    generate.addEventListener('click', () => {
+        const length = + lengthEl.value;
+        const hasLower = lowerCaseEl.checked;
+        const hasUpper = upperCaseEl.checked;
+        const hasNumber = numbersEl.checked;
+        const hasSymbol = symbolsEl.checked;
+        
+        resultEl.innerText = generatePassword(hasLower, hasUpper, hasNumber, hasSymbol, length);
+    });
 
-    static addBookToList(Book){
-        const list = document.querySelector('#book-list');
-        const row=document.createElement('tr');
-        row.innerHTML= `
-            <td>${Book.title}</td>
-            <td>${Book.author}</td>
-            <td>${Book.isbn}</td>
-            <td><a href="#" class="btn btn-danger btn-sm delete">X</a></td>
 
-        `;
+    function generatePassword(lower, upper, number, symbol, length) {
+        let generatedPassword = '';
+        const typesCount = lower + upper + number + symbol;
+        const typesArr = [{lower}, {upper}, {number}, {symbol}].filter(item => Object.values(item)[0]);
+        
 
-        list.appendChild(row);
-    }
-
-    static clearFields(){
-        document.querySelector('#title').value='';
-        document.querySelector('#author').value='';
-        document.querySelector('#isbn').value='';
-
-    }
-
-    static DeleteBook(el){
-        if(el.classList.contains('delete')){
-            el.parentElement.parentElement.remove();
+        // Doesn't have a selected type
+        if(typesCount === 0) {
+            return '';
         }
-    }
-
-    static showAlert(message,className){
-        const div=document.createElement('div');
-        div.className=`alert alert-${className}`;
-        div.appendChild(document.createTextNode(message));
-        const container = document.querySelector('.container');
-        const form = document.querySelector('#book-form');
-        container.insertBefore(div,form);
-
-        //vanish in 2 seconds
-        setTimeout(() =>document.querySelector('.alert').remove(),2500);
-    }
-
-}
-
-
-
-///store class
-class Store{
-     static getBooks(){
-        let books;
-        if(localStorage.getItem('books')===null){
-            books=[];
-        }else{
-            books = JSON.parse(localStorage.getItem('books'));
+        
+        // create a loop
+        for(let i=0; i<length; i+=typesCount) {
+            typesArr.forEach(type => {
+                const funcName = Object.keys(type)[0];
+                generatedPassword += randomFunc[funcName]();
+            });
         }
-        return books;
+        
+        const finalPassword = generatedPassword.slice(0, length);
+        console.log(finalPassword);
+
+
+        return finalPassword;
     }
-
-     static addBook(Book){
-        const books = Store.getBooks();
-        books.push(Book);
-        localStorage.setItem('books',JSON.stringify(books));
-
-    }
-
-    static removeBook(isbn){
-        const books = Store.getBooks();
-        books.forEach((book,index) =>{
-            if(book.isbn === isbn){
-               books.splice(index,1);     
-            }
-        });
-
-        localStorage.setItem('books',JSON.stringify(books));
-    }
-}
-
-
-
-
-//Storage class
-document.addEventListener('DOMContentLoaded', UI.displayBooks);
-
-///Events display books
-document.querySelector('#book-form').addEventListener('submit',(e) =>{
-
-///prevent default
-e.preventDefault();
-
-    //get form values
-
-const title= document.querySelector('#title').value;
-const author= document.querySelector('#author').value;
-const isbn= document.querySelector('#isbn').value;
-
-
-///Validation
-if(title === '' || author ==='' || isbn==='' || isbn=='0'){
-    UI.showAlert('please fill all the form','danger');    
-
-}else{
-
-    const book = new Book(title,author,isbn);
-    //add book to user
-    UI.addBookToList(book);
-    
-    //add book to Store
-    Store.addBook(book);
-
-    //show success Message
-    UI.showAlert("Book added successFully", 'success');
-
-    ///clear fields;
-    UI.clearFields();
-
-}
-
-});
-
-
-
-
-
-
-//remove
-document.querySelector('#book-list').addEventListener('click', (e) =>{
-
-    if(confirm("are you sure you wanna delete the Book...") == true){
-        UI.DeleteBook(e.target);
-
-        Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
-    
-    
-        UI.showAlert("Book Deleted successfully", "info");
-    }else{
-        UI.showAlert("Book Still in library", "info");
-
-    }
-
     
 
-});
+
+    function getRandomLower() {
+        return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+    }
+    
+    function getRandomUpper() {
+        return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+    }
+    
+
+    function getRandomNumber(){
+        let random = String.fromCharCode(Math.floor(Math.random()*10) +48);
+
+        return random;
+        
+    }
+
+
+    function getRandomSymbol(){
+        const symbols = '!#$%&/(){}*+-?¡¿=<>,.|°';
+        return symbols[Math.floor(Math.random()*symbols.length)];
+    }
+
+
