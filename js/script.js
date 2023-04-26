@@ -1,120 +1,106 @@
-console.log("Ejercicios funcionesII");
-console.log("Ejercicio I: Caducidad de un producto");
-
-let myProduct = {
-    name:"milk",
-    year: 2021,
-    getDateForRootenStatus: function (year) {
-        let status = true;
-        if(this.year<2023){
-        }else{
-            status=false;
-        }
-        return status;
-      },
-};
-
-let myProductII = {
-    name:"Dairy",
-    year: 2024,
-    getDateForRootenStatus: function (year) {
-        let status = true;
-        if(this.year<2023){
-        }else{
-            status=false;
-        }
-        return status;
-      },
-};
-
-
-function isRootten(status, name){
-    let answer ='';
-    switch(status){
-        case false:
-            answer ="El producto " + name +" esta fresco";
-            break;
-        case true:
-            answer ="El producto " + name +" esta caduco";
-            break; 
-        default:
-            answer ="El producto no tiene fecha de caducidad"
-
-    }
-    return answer;
-}
-
-let test = isRootten(myProductII.getDateForRootenStatus(this.year),myProductII.name);
-let testII = isRootten(myProduct.getDateForRootenStatus(this.year),myProduct.name);
-
-console.log(test);
-console.log(testII);
-
-
-
-console.log("")
-console.log("Ejercicio II: Mostrar Descripcion de un auto");
-
-let car={
-    name: "Sentra",
-    company:"Nissan",
-    year:2018,
-    airconditioning:true
-}
-
-let carII={
-    name: "Volvo V90",
-    company:"Volvo",
-    year:2023,
-    airconditioning:false
-}
-
-
-
-function showCar(name,company,year,airconditioning){
-    let anser ='';
-    if (airconditioning === true){
-        anser ="the  car´s name is " + name + " its company is " + company + " and its from the year " + year + " and it has airconditioning";
-    }else{
-        anser ="the  car´s name is " + name + " its company is " + company + " and its from the year " + year + " and it does no have airconditioning";
+class Producto{
+    static contadorProductos=0;
+    constructor(nombre,precio){
+        ///id de produto que se aumenta sistematicamente
+        this.id_producto=++Producto.contadorProductos;
+        this.nombre=nombre;
+        this.precio=precio;
     }
 
-    return anser;
-}
+    ///futuros usos de metodo get
+    get idProducto(){
+        return this.id_producto;
+    }
 
-let testea = showCar(car.name,car.company,car.year,car.airconditioning);
-let testeaII = showCar(carII.name,carII.company,carII.year,carII.airconditioning);
+    get Nombre(){
+        return this.nombre;
+    }
 
-console.log(testea);
-console.log(testeaII);
+    set Nombre(nombre){
+        this.nombre=nombre;
+    }
 
+    get Precio(){
+        return this.precio;
+    }
 
-console.log("")
-console.log("Ejercicio III: Fecha del album");
+    set Precio(precio){
+        this.precio=precio;
+    }
 
-
-let band ={
-    name: "Queen",
-    album:"Jazz",
-    year:1978
-}
-
-let bandII ={
-    name: "maná",
-    album:"amar es combatir",
-    year:2006
-}
-
-function beholdAlbum(name,album,year){
-    let period = 2023 - year;
-
-    return `the album ${album}, of the  band ${name}   was released on ${year}  and it has been ${period} years since its recording`;
+    toString(){
+    return `idProducto: ${this.id_producto} , nombre : ${this.nombre}, precio:  $${this.precio}`;
+    }
 }
 
 
-let resultSet = beholdAlbum(band.name,band.album, band.year);
-let resultSetII = beholdAlbum(bandII.name,bandII.album, bandII.year);
+class Order{
+    static contadorOrdenes=0;
+
+    static get MAX_PRODUCTOS(){
+        return 5;
+    }
+
+    constructor(){
+        this.id_Orden=++Order.contadorOrdenes;
+        this.productos =[];
+        this.contadoProductoAgregados =0;
+    }
+
+    get idOrden(){
+        return this.id_Orden;
+    }
+
+    agregarProducto(Producto){
+        if(this.productos.length < Order.MAX_PRODUCTOS){
+            this.productos.push(Producto);
+            this.productos[this.contadoProductoAgregados++] =Producto; 
+        }else{
+            console.log("No se pueden agregar más productos");
+            
+        }
+    }
+
+    calcularTotal(){
+        let totalVenta =0;
+        for(let produto of this.productos){
+            totalVenta += produto.precio; //totalVenta =TotalVenta + producto.precio
+        }
+        return totalVenta;
+    }
 
 
-console.log(resultSet);
-console.log(resultSetII);
+    mostrarOrden(){
+        let productoOrden="";
+        for(let Producto of this.productos){
+            productoOrden += '\n'+Producto.toString() + '';
+        }
+        console.log(`Orden:${this.id_Orden} Total: ${this.calcularTotal()}, Productos: ${productoOrden} `);
+    }
+
+}
+
+let producto1 = new Producto("eggs",10);
+let producto2 = new Producto("camisa",100.34);
+let producto3 = new Producto("apple",20);
+
+let orden1 = new Order();
+orden1.agregarProducto(producto1);
+orden1.agregarProducto(producto2);
+
+
+let orden2 = new Order();
+orden2.agregarProducto(producto3);
+orden2.agregarProducto(producto2);
+orden2.agregarProducto(producto3);
+orden2.agregarProducto(producto3);
+orden2.agregarProducto(producto3);
+orden2.agregarProducto(producto2);
+orden2.agregarProducto(producto1);
+
+
+
+
+
+orden1.mostrarOrden();
+orden2.mostrarOrden();
