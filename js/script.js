@@ -1,106 +1,159 @@
-class Producto{
-    static contadorProductos=0;
-    constructor(nombre,precio){
-        ///id de produto que se aumenta sistematicamente
-        this.id_producto=++Producto.contadorProductos;
-        this.nombre=nombre;
-        this.precio=precio;
+class DispositivoEntrada{
+    constructor(tipoEntrada,marca){
+        this._tipoEntrada = tipoEntrada;
+        this._marca=marca;
     }
 
-    ///futuros usos de metodo get
-    get idProducto(){
-        return this.id_producto;
+    get tipoEntrada(){
+        return this._tipoEntrada;
     }
 
-    get Nombre(){
-        return this.nombre;
+    set tipoEntrada(tipoEntrada){
+        this._tipoEntrada=tipoEntrada;
     }
 
-    set Nombre(nombre){
-        this.nombre=nombre;
+    get marca(){
+        return this._marca;
     }
 
-    get Precio(){
-        return this.precio;
+    set marca(marca){
+        this._marca=marca;
+    }
+}
+
+
+class Raton extends DispositivoEntrada{
+    static contadorRatones =0;
+    constructor (tipoEntrada,marca){
+        super(tipoEntrada,marca);
+        this.id_raton = ++ Raton.contadorRatones;
     }
 
-    set Precio(precio){
-        this.precio=precio;
+    get idRaton(){
+        return this.id_raton;
     }
 
     toString(){
-    return `idProducto: ${this.id_producto} , nombre : ${this.nombre}, precio:  $${this.precio}`;
+        return `Raton:[idRaton: ${this.id_raton}, tipoEntrada: ${this.tipoEntrada}, marca: ${this.marca}]`;
     }
 }
 
 
-class Order{
-    static contadorOrdenes=0;
-
-    static get MAX_PRODUCTOS(){
-        return 5;
+class Teclado extends DispositivoEntrada{
+    static contadorTeclado =0;
+    constructor(tipoEntrada, marca){
+        super(tipoEntrada,marca);
+        this._idteclado =++Teclado.contadorTeclado;
     }
 
+    get idTeclado(){
+        return this._idteclado;
+    }
+
+    toString(){
+        return `Teclado: [ idTeclado: ${this._idteclado}, tipoEntrada: ${this.tipoEntrada}, marca:${this.marca}]`;
+
+    }
+
+}
+
+
+class Monitor{
+    static contadorMonitores =0;
+    constructor(marca,tamaño){
+        this._idMonitor =++Monitor.contadorMonitores;
+        this._marca =marca;
+        this._tamaño = tamaño;
+    }
+
+    getidMonitor(){
+        return this._idMonitor;
+    }
+
+    toString(){
+        return `Monitor: [idMonitor: ${this._idMonitor}, marca:${this._marca}, tamaño: ${this._tamaño}]`;
+    }
+
+}
+
+
+class Computadora{
+    static contadorComputadoras =0;
+        constructor(nombre,monitor,raton,teclado){
+            this._idComputadora =++ Computadora.contadorComputadoras;
+            this._nombre=nombre;
+            this._monitor = monitor;
+            this._raton = raton;
+            this._teclado = teclado;
+
+        }
+    toString(){
+        return `computadora ${this._idComputadora}: nombre:${this._nombre}\n monitor: ${this._monitor},\n raton: ${this._raton},\n teclado: ${this._teclado} `;
+    }    
+}
+
+
+class Orden{
+    static contadorOrdenes =0;
     constructor(){
-        this.id_Orden=++Order.contadorOrdenes;
-        this.productos =[];
-        this.contadoProductoAgregados =0;
+        this._idOrden =++ Orden.contadorOrdenes;
+        this._computadoras =[];
     }
 
-    get idOrden(){
-        return this.id_Orden;
+    get IdOrden(){
+        return this._idOrden;
     }
 
-    agregarProducto(Producto){
-        if(this.productos.length < Order.MAX_PRODUCTOS){
-            this.productos.push(Producto);
-            this.productos[this.contadoProductoAgregados++] =Producto; 
-        }else{
-            console.log("No se pueden agregar más productos");
-            
-        }
+    agregarComputadora(computadora){
+        this._computadoras.push(computadora);
     }
-
-    calcularTotal(){
-        let totalVenta =0;
-        for(let produto of this.productos){
-            totalVenta += produto.precio; //totalVenta =TotalVenta + producto.precio
-        }
-        return totalVenta;
-    }
-
 
     mostrarOrden(){
-        let productoOrden="";
-        for(let Producto of this.productos){
-            productoOrden += '\n'+Producto.toString() + '';
+        let computadorasOrden = '';
+        for(let computadora of this._computadoras){
+            computadorasOrden += `\n ${computadora}`;
+
         }
-        console.log(`Orden:${this.id_Orden} Total: ${this.calcularTotal()}, Productos: ${productoOrden} `);
+
+        console.log(`Orden: ${this._idOrden}, Computadoras: ${computadorasOrden}`);
     }
 
 }
 
-let producto1 = new Producto("eggs",10);
-let producto2 = new Producto("camisa",100.34);
-let producto3 = new Producto("apple",20);
-
-let orden1 = new Order();
-orden1.agregarProducto(producto1);
-orden1.agregarProducto(producto2);
-
-
-let orden2 = new Order();
-orden2.agregarProducto(producto3);
-orden2.agregarProducto(producto2);
-orden2.agregarProducto(producto3);
-orden2.agregarProducto(producto3);
-orden2.agregarProducto(producto3);
-orden2.agregarProducto(producto2);
-orden2.agregarProducto(producto1);
 
 
 
+let raton1 = new Raton('USB', 'hp');
+let raton2 = new Raton('bluetooth', 'Dell');
+
+console.log(raton1.toString());
+console.log(raton2.toString());
 
 
-orden1.mostrarOrden();
-orden2.mostrarOrden();
+let teclado1 = new Teclado('Bluetooth','MSI');
+let tecaldo2 = new Teclado('USB', 'hp');
+console.log(tecaldo2.toString());
+console.log(teclado1.toString());
+
+
+let monitor1 = new Monitor('hp',12);
+console.log(monitor1.toString());
+
+
+let computadora = new Computadora('hp', monitor1,raton1,tecaldo2);
+console.log(computadora.toString());
+
+let computadoraII = new Computadora('apple', monitor1,raton2,teclado1);
+console.log(computadora.toString());
+
+
+let Orden1= new Orden();
+Orden1.agregarComputadora(computadora);
+Orden1.agregarComputadora(computadoraII);
+Orden1.agregarComputadora(computadora);
+Orden1.mostrarOrden();
+
+
+let Orden2= new Orden();
+Orden2.agregarComputadora(computadora);
+Orden2.mostrarOrden();
