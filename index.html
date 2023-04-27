@@ -1,39 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style\bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style\style.css">
-
-
-    <title>Face Time Detection</title>
-    <script defer src="js\face-api.min.js"></script>
-    <script defer src="js\script.js"></script>
-
-
-    <style>
-        body{
-        margin:0;
-        padding:0;
-        height: 100vh;
-        display:flex;
-        justify-content: center;
-        align-items: center;
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style\style.css">
+  <script src="js\script.js" defer></script>
+  <title>Document</title>
 </head>
 <body>
- 
-    
-    
-    <video id="video" width="720" height="560" autoplay muted>
-
-
-    </video>       
-       
+  <div class="search-wrapper">
+    <label for="search" id="centrar">Search Users</label>
+    <input type="search" id="search" data-search>
+  </div>
+  <div class="user-cards" data-user-cards-container></div>
+  <template data-user-template>
+    <div class="card">
+      <div class="header" data-header></div>
+      <div class="body" data-body></div>
+    </div>
+  </template>
 </body>
 </html>

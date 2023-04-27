@@ -1,25 +1,31 @@
-const video= document.getElementById('video');
-Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-    faceapi.nets.faceExpressionNet.loadFromUri('/models'),
-]).then(startVideo)
+const userCardTemplate = document.querySelector("[data-user-template]")
+const userCardContainer = document.querySelector("[data-user-cards-container]")
+const userSearchInput = document.querySelector("[data-search]")
 
+let users =[];
 
-function startVideo(){
-    navigator.getUserMedia(
-        {
-        video:{},
-    },
-    stream => video.srcObject = stream,
-    err=> console.error(err)
-    )
-
-}
-
-
-video.addEventListener('play',() =>{
-    console.log("asldalsdjlas");
+userSearchInput.addEventListener("input", (e) =>{
+    const value = e.target.value.toLowerCase();
+    users.forEach(user =>{
+        const isVisible = user.name.toLowerCase().includes(value) || user.email.toLowerCase().includes(value)
+        user.element.classList.toggle("hide", !isVisible)
+    })
 })
+
+
+
+fetch("https://jsonplaceholder.typicode.com/users")
+  .then(res => res.json())
+  .then(data => {
+    users = data.map(user => {
+      const card = userCardTemplate.content.cloneNode(true).children[0]
+      const header = card.querySelector("[data-header]")
+      const body = card.querySelector("[data-body]")
+      header.textContent = user.name
+      body.textContent = user.email
+      userCardContainer.append(card)
+      return { name: user.name, email: user.email, element: card }
+    })
+  })
+
 
