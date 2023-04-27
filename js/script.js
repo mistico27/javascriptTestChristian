@@ -1,159 +1,91 @@
-class DispositivoEntrada{
-    constructor(tipoEntrada,marca){
-        this._tipoEntrada = tipoEntrada;
-        this._marca=marca;
-    }
+console.log("programa I Iniciales con cualquier nombre completo");
+console.log("nombre completo nombre Apellido paterno y Apellido Materno");
 
-    get tipoEntrada(){
-        return this._tipoEntrada;
-    }
-
-    set tipoEntrada(tipoEntrada){
-        this._tipoEntrada=tipoEntrada;
-    }
-
-    get marca(){
-        return this._marca;
-    }
-
-    set marca(marca){
-        this._marca=marca;
-    }
+let myName ={
+    name:'Christian',
+    lastName1:'Beltran',
+    lastName2:'Bedolla'
+}
+let myNameII ={
+    name:'Jose',
+    lastName1:'Del toro',
+    lastName2:'Hernandez'
 }
 
 
-class Raton extends DispositivoEntrada{
-    static contadorRatones =0;
-    constructor (tipoEntrada,marca){
-        super(tipoEntrada,marca);
-        this.id_raton = ++ Raton.contadorRatones;
-    }
+function showTheName(name, lastName1, lastName2){
+    let newName = name[0];
+    let newLastname1 = lastName1[0];
+    let newLastname2 = lastName2[0];
 
-    get idRaton(){
-        return this.id_raton;
-    }
-
-    toString(){
-        return `Raton:[idRaton: ${this.id_raton}, tipoEntrada: ${this.tipoEntrada}, marca: ${this.marca}]`;
-    }
-}
-
-
-class Teclado extends DispositivoEntrada{
-    static contadorTeclado =0;
-    constructor(tipoEntrada, marca){
-        super(tipoEntrada,marca);
-        this._idteclado =++Teclado.contadorTeclado;
-    }
-
-    get idTeclado(){
-        return this._idteclado;
-    }
-
-    toString(){
-        return `Teclado: [ idTeclado: ${this._idteclado}, tipoEntrada: ${this.tipoEntrada}, marca:${this.marca}]`;
-
-    }
+    return newName + '.' + newLastname1 +'.' +newLastname2+'.'; 
 
 }
 
+console.log(showTheName(myName.name,myName.lastName1,myName.lastName2));
+console.log(showTheName(myNameII.name,myNameII.lastName1,myNameII.lastName2));
 
-class Monitor{
-    static contadorMonitores =0;
-    constructor(marca,tamaño){
-        this._idMonitor =++Monitor.contadorMonitores;
-        this._marca =marca;
-        this._tamaño = tamaño;
-    }
 
-    getidMonitor(){
-        return this._idMonitor;
-    }
+console.log("ProgramaII evaluacion nombre de productos")
+console.log("Deben ser faciles de recordar  hasta 5 letras son faciles de recordar");
 
-    toString(){
-        return `Monitor: [idMonitor: ${this._idMonitor}, marca:${this._marca}, tamaño: ${this._tamaño}]`;
-    }
-
+let palabra ={
+    name:"escoba",
+}
+let palabraII ={
+    name:"mesa",
 }
 
-
-class Computadora{
-    static contadorComputadoras =0;
-        constructor(nombre,monitor,raton,teclado){
-            this._idComputadora =++ Computadora.contadorComputadoras;
-            this._nombre=nombre;
-            this._monitor = monitor;
-            this._raton = raton;
-            this._teclado = teclado;
-
-        }
-    toString(){
-        return `computadora ${this._idComputadora}: nombre:${this._nombre}\n monitor: ${this._monitor},\n raton: ${this._raton},\n teclado: ${this._teclado} `;
-    }    
+function EasyToRemember(palabra){
+    let answer ='';
+    if(palabra.length<5){
+        answer = palabra + ' is Easy To remember';
+    }else{
+        answer= palabra + ' hard word to remember';
+    }
+    return answer;
 }
 
+let myTest = EasyToRemember(palabra.name);
+let myTestII = EasyToRemember(palabraII.name);
 
-class Orden{
-    static contadorOrdenes =0;
-    constructor(){
-        this._idOrden =++ Orden.contadorOrdenes;
-        this._computadoras =[];
-    }
+console.log(myTest);
+console.log(myTestII);
 
-    get IdOrden(){
-        return this._idOrden;
-    }
 
-    agregarComputadora(computadora){
-        this._computadoras.push(computadora);
-    }
+console.log("Programa III Hacer que cada palabra se pueda dividir equitativamente");
 
-    mostrarOrden(){
-        let computadorasOrden = '';
-        for(let computadora of this._computadoras){
-            computadorasOrden += `\n ${computadora}`;
-
-        }
-
-        console.log(`Orden: ${this._idOrden}, Computadoras: ${computadorasOrden}`);
-    }
-
+let word={
+    name:"Christian"
+}
+let wordII={
+    name:"Mara"
 }
 
+function divideMyWord(word){
+    let answer1 ='';
+    let answer2 ='';
+    if(word.length % 2 === 0){
+       let newWord= word.length/2;
+       let newword2= word.length;
+        answer1=word.slice(0, newWord);
+        answer2 =word.slice(newWord, newword2);
+       return `${answer1} \n${answer2}`;
+
+    }else if(word.length % 2 === 1){
+        let wordNew = word.length/2;
+        let newword2= word.length;
+
+        answer1= word.substring(wordNew+1);
+        answer2 = word.slice(0, answer1.length);
+        return `${answer2} \n${answer1}` ;
+    }
 
 
 
-let raton1 = new Raton('USB', 'hp');
-let raton2 = new Raton('bluetooth', 'Dell');
+   
+}
 
-console.log(raton1.toString());
-console.log(raton2.toString());
-
-
-let teclado1 = new Teclado('Bluetooth','MSI');
-let tecaldo2 = new Teclado('USB', 'hp');
-console.log(tecaldo2.toString());
-console.log(teclado1.toString());
-
-
-let monitor1 = new Monitor('hp',12);
-console.log(monitor1.toString());
-
-
-let computadora = new Computadora('hp', monitor1,raton1,tecaldo2);
-console.log(computadora.toString());
-
-let computadoraII = new Computadora('apple', monitor1,raton2,teclado1);
-console.log(computadora.toString());
-
-
-let Orden1= new Orden();
-Orden1.agregarComputadora(computadora);
-Orden1.agregarComputadora(computadoraII);
-Orden1.agregarComputadora(computadora);
-Orden1.mostrarOrden();
-
-
-let Orden2= new Orden();
-Orden2.agregarComputadora(computadora);
-Orden2.mostrarOrden();
+console.log(divideMyWord(word.name));
+console.log();
+console.log(divideMyWord(wordII.name));
