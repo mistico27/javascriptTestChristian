@@ -1,104 +1,129 @@
-const resultEl =
-    document.getElementById('result');
-    const lengthEl =
-    document.getElementById('length');
-    const upperCaseEl =
-    document.getElementById('uppercase');
-    const lowerCaseEl =
-    document.getElementById('lowercase');
-    const numbersEl =
-    document.getElementById('numbers');
-    const  symbolsEl =
-    document.getElementById('symbols');
-    const generateEl =
-    document.getElementById('generate');
-    const clipboard =
-    document.getElementById('clipboard');    
+const quizData =[
+    {
+        question:"Quien es el más guapo?",
+        a:"Christian Beltran Bedolla",
+        b:"Henry Cavill",
+        c:"El tio que la hace de Thor",
+        d:"Amlo",
+
+        correct:"a",
+    },
+
+    {
+        question:"Que lenguaje de programacion es mejor para desarrollo Web?",
+        a:"Java",
+        b:"javascript",
+        c:"C++",
+        d:"Python",
+
+        correct:"b",
+
+    },
+    {
+        question:"Quien es el padre de la patria de México?",
+        a:"Miguel Hidalgo",
+        b:"Napoleon",
+        c:"Alberto cortez",
+        d:"Amlo",
+
+        correct:"a",
+
+    },
+    {
+        question:"Mujer mas hermosa del mundo?",
+        a:"Gal gadot",
+        b:"Lorena herrera",
+        c:"Mi mama",
+        d:"Selena gomez",
+
+        correct:"c",
+
+    },
 
 
-    const randomFunc ={
-        lower:getRandomLower,
-        upper:getRandomUpper,
-        number:getRandomNumber,
-        symbol:getRandomSymbol
-    }
+
+
+];
 
 
 
-    clipboard.addEventListener('click', () => {
-        const textarea = document.createElement('textarea');
-        const password = resultEl.innerText;
-        
-        if(!password) { return; }
-        
-        textarea.value = password;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        textarea.remove();
-        alert('Password copied to clipboard');
-    });
-
-    
-    generate.addEventListener('click', () => {
-        const length = + lengthEl.value;
-        const hasLower = lowerCaseEl.checked;
-        const hasUpper = upperCaseEl.checked;
-        const hasNumber = numbersEl.checked;
-        const hasSymbol = symbolsEl.checked;
-        
-        resultEl.innerText = generatePassword(hasLower, hasUpper, hasNumber, hasSymbol, length);
-    });
 
 
-    function generatePassword(lower, upper, number, symbol, length) {
-        let generatedPassword = '';
-        const typesCount = lower + upper + number + symbol;
-        const typesArr = [{lower}, {upper}, {number}, {symbol}].filter(item => Object.values(item)[0]);
-        
 
-        // Doesn't have a selected type
-        if(typesCount === 0) {
-            return '';
+const quiz= document.getElementById('quiz')
+const answerEls = document.querySelectorAll('.answer')
+const questionEl = document.getElementById('question')
+const a_text = document.getElementById('a_text')
+const b_text = document.getElementById('b_text')
+const c_text = document.getElementById('c_text')
+const d_text = document.getElementById('d_text')
+
+const submitBtn = document.getElementById('submit');
+
+let currentquiz = 0;
+let score =0;
+
+
+
+loadQuiz();
+
+function loadQuiz(){
+deselectAnswers();
+
+const currentquizData = quizData[currentquiz];
+questionEl.innerText = currentquizData.question;
+a_text.innerText=currentquizData.a;
+b_text.innerText=currentquizData.b;
+c_text.innerText=currentquizData.c;
+d_text.innerText=currentquizData.d;
+
+
+}
+
+
+
+
+function deselectAnswers(){
+    answerEls.forEach(answerEl => answerEl.checked=false);
+}
+
+
+
+function getSelecteed(){
+    let answer;
+    answerEls.forEach(answerEl =>{
+        if(answerEl.checked){
+            answer=answerEl.id;
         }
+    })
+    return answer;
+}
+
+
+
+
+submitBtn.addEventListener('click',() =>{
+    const answer = getSelecteed();
+    if(answer){
         
-        // create a loop
-        for(let i=0; i<length; i+=typesCount) {
-            typesArr.forEach(type => {
-                const funcName = Object.keys(type)[0];
-                generatedPassword += randomFunc[funcName]();
-            });
+        if (answer === quizData[currentquiz].correct){
+            score++;
         }
+    currentquiz++;
+    if(currentquiz<quizData.length)
+    {
+        loadQuiz();
+    }else{
+        quiz.innerHTML=`<h2> you answered ${score}/${quizData.length} answers correctly
         
-        const finalPassword = generatedPassword.slice(0, length);
-        console.log(finalPassword);
-
-
-        return finalPassword;
-    }
-    
-
-
-    function getRandomLower() {
-        return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-    }
-    
-    function getRandomUpper() {
-        return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-    }
-    
-
-    function getRandomNumber(){
-        let random = String.fromCharCode(Math.floor(Math.random()*10) +48);
-
-        return random;
-        
+        <button onclick="location.reload()">Reload</button>
+        `;
     }
 
-
-    function getRandomSymbol(){
-        const symbols = '!#$%&/(){}*+-?¡¿=<>,.|°';
-        return symbols[Math.floor(Math.random()*symbols.length)];
     }
+})
+
+
+
 
 
