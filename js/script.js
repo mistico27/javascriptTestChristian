@@ -1,123 +1,154 @@
-class Login {
-	constructor(form, fields) {
-		this.form = form;
-		this.fields = fields;
-		this.validateonSubmit();
-	}
-
-    validateonSubmit(){
-        let self=this;
-        this.form.addEventListener("submit", (e) => {
-          e.preventDefault();
-          var error = 0;
-          self.fields.forEach((field) => {
-              const input = document.querySelector(`#${field}`);
-              if (self.validateFields(input) == false) {
-                  error++;
-              }
-          });
-          if (error == 0) {
-              localStorage.setItem("auth", 1);
-              this.form.submit();
-          }
-      });
-      }
+const todoInput = document.querySelector(".todo-input");
+const todoButton = document.querySelector(".todo-button");
+const todoList = document.querySelector(".todo-list");
+const filterOption = document.querySelector(".filter-todo");
 
 
-       containsSpecialChars(str) {
-        const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-        return specialChars.test(str);
-      }
+document.addEventListener("DOMContentLoaded", getLocalTodos);
+todoButton.addEventListener("click",addTodo);
+todoList.addEventListener("click",deleteCheck);
+
+filterOption.addEventListener("change",filterTodo);
 
 
-      containsNumbers(str){
-        const numbers = /[1234567890]/;
-        return numbers.test(str);
 
-      }
+function addTodo(event) {
+    event.preventDefault();
+    const todoDiv = document.createElement("div");
+    todoDiv.classList.add("todo");
+    const newTodo = document.createElement("li");
+    newTodo.innerText = todoInput.value; 
+    newTodo.classList.add("todo-item");
+    todoDiv.appendChild(newTodo);
+    //ADDING TO LOCAL STORAGE 
+    saveLocalTodos(todoInput.value);
+    
+    const completedButton = document.createElement("button");
+    completedButton.innerHTML = '<i class="fas fa-check-circle"></li>';
+    completedButton.classList.add("complete-btn");
+    todoDiv.appendChild(completedButton);
 
-    validateFields(field){
-        const data = document.getElementById('username');
-     
-        if(field.value.trim() ==""){
-            this.setStatus(
-                field,
-                `${field.previousElementSibling.innerText} can not be blank`,
-                "error"
-            );
-            return false;
-        }else{
-            if(field.type =="password"){
-                if(field.value.length<8){
-                    this.setStatus(
-                        field,
-                        `${field.previousElementSibling.innerText},  Must be at last 8 characters`,
-                        "error"
-                    );
-                    return false;
+    const trashButton = document.createElement("button");
+    trashButton.innerHTML = '<i class="fas fa-trash"></li>';
+    trashButton.classList.add("trash-btn");
+    todoDiv.appendChild(trashButton);
+    
+    todoList.appendChild(todoDiv);
+    todoInput.value = "";
+}
+
+
+function deleteCheck(e){
+    const item = e.target;
+    if(item.classList[0] === "trash-btn"){
+        const todo= item.parentElement;
+        todo.classList.add("slide");
+
+        removeLocalToDos(todo);
+        todo.addEventListener("transitioned",function(){
+            todo.remove();
+        });
+
+    }
+
+    if(item.classList[0] === "complete-btn"){
+        const todo= item.parentElement;
+        todo.classList.toggle("completed");
+    }
+
+}
+
+
+function filterTodo(e){
+    const todos= todoList.childNodes;
+    todos.forEach(function(todo){
+        switch(e.target.value){
+            case "all":
+                todo.style.display ="flex";
+                break;
+            case "completed":
+                if(todo.classList.contains("completed")){
+                    todo.style.display="flex";
                 }else{
-                    this.setStatus(field,null,"success");
-                    return true;
-                }
-            }else if(data!=''){
-                if(this.containsSpecialChars(data.value)== true){
-                    this.setStatus(
-                        field,
-                        `${field.previousElementSibling.innerText},  Special characteres`,
-                        "error"
-                    );
-                    return false;
-                }else if(this.containsNumbers(data.value)== true){
-                    
-                        this.setStatus(
-                            field,
-                            `${field.previousElementSibling.innerText},  contains numbers`,
-                            "error"
-                        );
-                        return false;
-                }
-                
-                else{
-                    this.setStatus(field,null,"success");
-                    return true;
-                }
-
-            }else{
-                this.setStatus(field,null,"success");
-                return true;
-            }
+                   todo.style.display ="none"; 
+                }    
+                break;
+            case "incomplete":
+                if(!todo.classList.contains("completed")){
+                    todo.style.display = "flex";
+                }else{
+                    todo.style.display = "none";
+                }    
+                break;
         }
-    }
-
-    setStatus(field,message,status){
-        const errorMessage = field.parentElement.querySelector(".error-message");
-
-        if(status =="success"){
-            if(errorMessage){
-                errorMessage.innerText="";
-            }
-            field.classList.remove("input-error");
-        }
-
-        if(status=="error"){
-            errorMessage.innerText =message;
-            field.classList.add("input-error");
-        }
-    }
-
-}
-
-const form = document.querySelector('.loginForm');
-if(form){
-  const fields =["username","password"];
-  const validator=new Login(form,fields);
+    });
 }
 
 
-  
-function containsSpecialChars(str) {
-    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-    return specialChars.test(str);
-  }
-console.log(containsSpecialChars("kasimiro"));
-console.log(containsSpecialChars("christian"));
+function saveLocalTodos(todo) {
+    let todos;
+    if(localStorage.getItem("todos") === null) {
+        todos = [];
+    } else {
+        todos = JSON.parse(localStorage.getItem("todos"));
+    }
+    todos.push(todo);
+    localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+
+function getLocalTodos(){
+    let todos;
+    if(localStorage.getItem("todos") === null){
+        todos=[];
+
+    }else{
+        todos = JSON.parse(localStorage.getItem("todos"));        
+    }
+
+    todos.forEach(function(todo){
+        const todoDiv = document.createElement("div");
+        todoDiv.classList.add("todo");
+        const newTodo = document.createElement("li");
+        newTodo.innerText = todo;
+        newTodo.classList.add("todo-item");
+        todoDiv.appendChild(newTodo);
+
+        const completedButton = document.createElement("button");
+        completedButton.innerHTML ='<i class=fas fa-check-circle"></li>';
+        completedButton.classList.add("complete-btn");
+        todoDiv.appendChild(completedButton);
+
+        const trashButton = document.createElement("button");
+        completedButton.innerHTML ='<i class=fas fa-trash"></li>';
+        completedButton.classList.add("complete-btn");
+        todoDiv.appendChild(trashButton);
+
+        todoList.appendChild(todoDiv);
+
+
+    });
+
+}
+
+
+
+function removeLocalToDos(todo){
+    let todos;
+    if(localStorage.getItem("todos") === null){
+        todos = [];
+    }else{
+        todos = JSON.parse(localStorage.getItem("todos"));
+    }
+
+
+
+    const todoIndex = todo.children[0].innerText;
+    todos.splice(todos.indexOf(todoIndex),1);
+    localStorage.setItem("todos",JSON.stringify(todos));    
+}
+
+
+
+
+
