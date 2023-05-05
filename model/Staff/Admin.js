@@ -38,9 +38,9 @@ adminSchema.pre('save', async function(next){
 
 ///verify password
 adminSchema.methods.verifyPassword= async function(enteredPassword){
-        
-
+return await bcrypt.compare(enteredPassword,this.password);
 }
+
 
 
 
