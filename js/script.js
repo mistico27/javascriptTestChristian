@@ -1,30 +1,28 @@
-//Book class constructor of a book
-class Book{
-    constructor(title,author,isbn){
-        this.title=title;
-        this.author=author;
-        this.isbn=isbn;
+//Product class constructor of a Product
+class Products{
+    constructor(product,description,availability){
+        this.product=product;
+        this.description=description;
+        this.availability=availability;
     }
 }
 
 
-
 //User Interface
 class UI{
-    static displayBooks(){
+    static displayProdcts(){
+        const products =Store.getProducts();
+        products.forEach((Products) => UI.addProductToList(Products));
         
-        const books =Store.getBooks();
-        books.forEach((Book) => UI.addBookToList(Book));
-
     }
 
-    static addBookToList(Book){
-        const list = document.querySelector('#book-list');
+    static addProductToList(Products){
+        const list = document.querySelector('#product-list');
         const row=document.createElement('tr');
         row.innerHTML= `
-            <td>${Book.title}</td>
-            <td>${Book.author}</td>
-            <td>${Book.isbn}</td>
+            <td>${Products.product}</td>
+            <td>${Products.description}</td>
+            <td>${Products.availability}</td>
             <td><a href="#" class="btn btn-danger btn-sm delete">X</a></td>
 
         `;
@@ -33,13 +31,13 @@ class UI{
     }
 
     static clearFields(){
-        document.querySelector('#title').value='';
-        document.querySelector('#author').value='';
-        document.querySelector('#isbn').value='';
+        document.querySelector('#product').value='';
+        document.querySelector('#description').value='';
+        document.querySelector('#flexCheckDefault').checked= false;
 
     }
 
-    static DeleteBook(el){
+    static DeleteProduct(el){
         if(el.classList.contains('delete')){
             el.parentElement.parentElement.remove();
         }
@@ -50,7 +48,7 @@ class UI{
         div.className=`alert alert-${className}`;
         div.appendChild(document.createTextNode(message));
         const container = document.querySelector('.container');
-        const form = document.querySelector('#book-form');
+        const form = document.querySelector('#product-form');
         container.insertBefore(div,form);
 
         //vanish in 2 seconds
@@ -63,32 +61,33 @@ class UI{
 
 ///store class
 class Store{
-     static getBooks(){
-        let books;
-        if(localStorage.getItem('books')===null){
-            books=[];
+     static getProducts(){
+        let products;
+        if(localStorage.getItem('Products')===null){
+            products=[];
         }else{
-            books = JSON.parse(localStorage.getItem('books'));
+            products = JSON.parse(localStorage.getItem('Products'));
         }
-        return books;
-    }
-
-     static addBook(Book){
-        const books = Store.getBooks();
-        books.push(Book);
-        localStorage.setItem('books',JSON.stringify(books));
+        return products;
 
     }
 
-    static removeBook(isbn){
-        const books = Store.getBooks();
-        books.forEach((book,index) =>{
-            if(book.isbn === isbn){
-               books.splice(index,1);     
+     static addProduct(Product){
+        const products = Store.getProducts();
+        products.push(Product);
+        localStorage.setItem('products',JSON.stringify(products));
+
+    }
+
+    static removeProduct(availability){
+        const products = Store.getProducts();
+        products.forEach((product,index) =>{
+            if(product.availability=== availability){
+               products.splice(index,1);     
             }
         });
 
-        localStorage.setItem('books',JSON.stringify(books));
+        localStorage.setItem('products',JSON.stringify(products));
     }
 }
 
@@ -96,36 +95,43 @@ class Store{
 
 
 //Storage class
-document.addEventListener('DOMContentLoaded', UI.displayBooks);
+document.addEventListener('DOMContentLoaded', UI.displayProdcts);
 
-///Events display books
-document.querySelector('#book-form').addEventListener('submit',(e) =>{
+///Events display products
+document.querySelector('#product-form').addEventListener('submit',(e) =>{
 
 ///prevent default
 e.preventDefault();
 
     //get form values
+let isAvailable=null;
+const productI= document.querySelector('#product').value;
+const description= document.querySelector('#description').value;
 
-const title= document.querySelector('#title').value;
-const author= document.querySelector('#author').value;
-const isbn= document.querySelector('#isbn').value;
+
+const availability= document.querySelector('#flexCheckDefault').checked;
+if(availability===false){
+    isAvailable=false;
+} else{
+    isAvailable=true;
+}
 
 
 ///Validation
-if(title === '' || author ==='' || isbn==='' || isbn=='0'){
+if(productI === '' || description ==='' || isAvailable===''){
     UI.showAlert('please fill all the form','danger');    
 
 }else{
 
-    const book = new Book(title,author,isbn);
+    const product = new Products(productI,description,isAvailable);
     //add book to user
-    UI.addBookToList(book);
+    UI.addProductToList(product);
     
     //add book to Store
-    Store.addBook(book);
+    Store.addProduct(product);
 
     //show success Message
-    UI.showAlert("Book added successFully", 'success');
+    UI.showAlert("Product added successFully", 'success');
 
     ///clear fields;
     UI.clearFields();
@@ -135,25 +141,43 @@ if(title === '' || author ==='' || isbn==='' || isbn=='0'){
 });
 
 
-
-
-
-
 //remove
-document.querySelector('#book-list').addEventListener('click', (e) =>{
+document.querySelector('#product-list').addEventListener('click', (e) =>{
 
-    if(confirm("are you sure you wanna delete the Book...") == true){
-        UI.DeleteBook(e.target);
-
-        Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
-    
-    
-        UI.showAlert("Book Deleted successfully", "info");
+    if(confirm("are you sure you wanna delete the Product...") == true){
+        UI.DeleteProduct(e.target);
+        Store.removeProduct(e.target.parentElement.previousElementSibling.textContent);
+        UI.showAlert("Product Deleted successfully", "info");
     }else{
-        UI.showAlert("Book Still in library", "info");
+        UI.showAlert("Product Still in Store", "info");
+    }
+});
+
+
+///search
+
+const userSearchInput = document.getElementById('search');
+
+
+userSearchInput.addEventListener("keyup", (e) =>{
+    const filter = e.target.value.toLowerCase();
+    let table =document.getElementById('product-list');
+    let tr =table.getElementsByTagName('tr');
+    for(var i=0; i<tr.length;i++){
+        let td=tr[i].getElementsByTagName('td')[0];
+        if(td){
+            let textValue=td.textContent || td.innerHTML;
+          if(textValue.includes(filter)){
+                tr[i].style.display="";
+            }else{
+                tr[i].style.display="none";
+
+            }
+
+        }
 
     }
-
-    
-
 });
+
+
+

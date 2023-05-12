@@ -1,0 +1,20 @@
+#centrar{
+	font-size: 50px ;
+	text-align: center;
+}
+
+.search-wrapper{
+	display:flex;
+	flex-direction:column;
+	gap:.25rem;
+	width:50%;
+}
+
+
+input{
+	font-size:1 rem;
+}
+
+.hide{
+	display:none;
+}
