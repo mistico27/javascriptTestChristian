@@ -9,63 +9,82 @@
     <link rel="stylesheet" href="style\style.css">
 
 
-    <title>Product List App</title>
+    <title>Tabla de Modal</title>
 </head>
 <body>
-
-    <div class="container mt-4">
-        <h1 class="display-4 text-center">
-            <i class="fas fa-book-open text-primary"></i>
-            My
-            <span class="text-primary">
-            Product
-            </span>
-            List
-        </h1>
-
-        <form id="product-form">
-            <div class="form-group">
-               <label for="product">Product</label> 
-               <input type="text" id="product" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label> 
-                <input type="text" id="description" class="form-control">
-             </div>    
-             <br>       
-             <div class="form-group">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                  Availability
-                </label>
-             </div>   
-            <br> 
-            <input type="submit" value="add Products"
-             class="btn btn-primary btn-block" >
-        </form>
-
-        <center>
-        <div class="search-wrapper">
-            <label for="search" id="centrar">search</label>
-            <input type="search" id="search">
-          </div>
-        </center>
-
-        <table class="table table-striped mt-4">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Description</th>
-                    <th>availability</th>
-                </tr>
-            </thead>
-
-            <tbody id="product-list">
-
-            </tbody>
-
+<div class="container mt-5 position-relative">
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-success mb-2">New Register</button>
+        <table class="table table-dark" id="table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Teclado Gamer Rgba</td>
+              <td>80</td>
+              <td>23</td>
+              <td><button class="btn btn-warning">Edit</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Mouse Rgba</td>
+              <td>50</td>
+              <td>800</td>
+              <td><button class="btn btn-warning">Edit</button></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Monitor Asus Hd</td>
+              <td>700</td>
+              <td>23</td>
+              <td><button class="btn btn-warning">Edit</button></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Lapto Lenovo</td>
+              <td>2.500</td>
+              <td>120</td>
+              <td><button class="btn btn-warning">Edit</button></td>
+            </tr>
+          </tbody>
         </table>
+      </div>
+    </div>
+    </div>
 
+  <div class="position-absolute w-100 top translate" id="modal">
+    <form class="form-control w-50">
+      <h1 class="text-center">New Register</h1>
+      <div class="form-control border-white">
+        <label for="">Id :</label>
+        <input type="text" class="form-control w-25">
+      </div>
+      <div class="form-control border-white">
+        <label for="">Name :</label>
+        <input type="text" class="form-control">
+      </div>
+      <div class="form-control border-white">
+        <label for="">Price :</label>
+        <input type="number" class="form-control w-25">
+      </div>
+      <div class="form-control border-white">
+        <label for="">Quantity :</label>
+        <input type="number" class="form-control w-25">
+      </div>
+      <div class="form-control border-white">
+        <button class="btn btn-primary">Save!</button>
+      </div>
+    </form>
+    <button class="position-absolute btn btn-danger close">Close</button>
     </div>
     
 
