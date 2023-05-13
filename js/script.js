@@ -24,7 +24,6 @@ class UI{
             <td>${Products.description}</td>
             <td>${Products.availability}</td>
             <td><a href="#" class="btn btn-danger btn-sm delete">X</a></td>
-
         `;
 
         list.appendChild(row);
@@ -117,10 +116,18 @@ if(availability===false){
 }
 
 
+
+
 ///Validation
 if(productI === '' || description ==='' || isAvailable===''){
     UI.showAlert('please fill all the form','danger');    
 
+}else if(containsSpecialChars(productI) || containsSpecialChars(description) ){
+    UI.showAlert('please fill with out special Characters','danger');    
+}else if(containsNumbers(productI)){
+    UI.showAlert('Product must not be filled with Numbers','danger');    
+}else if(productI.length<4){
+    UI.showAlert('Product must be at least have 4 letters','danger');    
 }else{
 
     const product = new Products(productI,description,isAvailable);
@@ -141,6 +148,22 @@ if(productI === '' || description ==='' || isAvailable===''){
 });
 
 
+//special Characters
+function containsSpecialChars(str) {
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    return specialChars.test(str);
+  }
+
+function containsNumbers(str){
+    const numbers = /[1234567890]/;
+    return numbers.test(str);
+
+  }
+
+
+
+
+
 //remove
 document.querySelector('#product-list').addEventListener('click', (e) =>{
 
@@ -151,6 +174,12 @@ document.querySelector('#product-list').addEventListener('click', (e) =>{
     }else{
         UI.showAlert("Product Still in Store", "info");
     }
+});
+
+
+ocument.querySelector('#products-ns').addEventListener('click', (e) =>{
+
+    console.log('Soy la info');
 });
 
 
