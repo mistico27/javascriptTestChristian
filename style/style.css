@@ -3,13 +3,6 @@
 	text-align: center;
 }
 
-.search-wrapper{
-	display:flex;
-	flex-direction:column;
-	gap:.25rem;
-	width:50%;
-}
-
 
 input{
 	font-size:1 rem;
@@ -17,4 +10,9 @@ input{
 
 .hide{
 	display:none;
+}
+
+
+.card-img, .card-img-bottom, .card-img-top {
+    width: 16%;
 }
