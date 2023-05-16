@@ -177,11 +177,6 @@ document.querySelector('#product-list').addEventListener('click', (e) =>{
 });
 
 
-ocument.querySelector('#products-ns').addEventListener('click', (e) =>{
-
-    console.log('Soy la info');
-});
-
 
 ///search
 
