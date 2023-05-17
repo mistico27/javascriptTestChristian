@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import {collection,getFirestore,addDoc,getDocs } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js"
+import {collection,getFirestore,addDoc,getDocs,onSnapshot,deleteDoc,doc,getDoc,updateDoc} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js"
 
 
 const firebaseConfig = {
@@ -22,4 +22,8 @@ export const saveTask =(nombre,apellidoPat,apellidoMat,cel,email,desc)=>{
   
 }
 
-export const getTasks = () => getDocs(collection(db,'tasks'))
+export const getTasks = () => getDocs(collection(db,'tasks'));
+export const onGetTasks = (callback) => onSnapshot(collection(db,'tasks'),callback);
+export const DeleteTask= id => deleteDoc(doc(db,'tasks',id));
+export const getTask = id => getDoc(doc(db,'tasks',id));
+export const updateTask = (id, newFields) =>updateDoc(doc(db,'tasks',id),newFields);
