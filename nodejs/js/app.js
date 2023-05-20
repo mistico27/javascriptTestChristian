@@ -1,61 +1,71 @@
-const BASE_URL = `https://myfirebase-25g-default-rtdb.firebaseio.com`;
+///primero pondremos el endpoint
+const BASE_URL ='https://caballeroszodiaco-bb6c6-default-rtdb.firebaseio.com';
+//crear el objeto de caballeros y el id
+let knightObject={};
+let knightId =null;
 
-let petObject = {};
-let petId = null;
+///funcionalidades
 
-const savePet = async (pet, petId) => {
-    if (petId) {
-        let response = await fetch(`${BASE_URL}/pets/${petId}/.json`, {
-            method: "PUT",
-            body: JSON.stringify(pet),
-        });
-        let data = await response.json();
-        return data
-    } else {
-        let response = await fetch(`${BASE_URL}/pets/.json`, {
-            method: "POST",
-            body: JSON.stringify(pet),
-        });
-        let data = await response.json();
-        return data;
-    }
+///Save and Edit
+const saveKnight= async (knight,knightId)=>{
+  if(knightId){
+    let response = await fetch(`${BASE_URL}/CZ/${knightId}/.json`,{
+      method:'PUT',
+      body:JSON.stringify(knight),
+    });
+    let data= await response.json();
+    return data;
+  }else{
+    let response =await fetch(`${BASE_URL}/CZ/.json`,{
+      method:'POST',
+      body:JSON.stringify(knight),
+    });
+    let data= await response.json();
+    return data;
+  }
 };
 
-document.getElementById("save-pet").addEventListener("click", async (event) => {
-    event.preventDefault();
-    document.querySelectorAll("#pet-form input").forEach((item) => {
-        petObject[item.name] = item.value
-    })
-    let response = await savePet(petObject, petId);
-    if (response) {
-        printAllPets("pet-list");
-    }
-    petId = null;
-    cleanForm()
+///Mandar llamar el metodo
+document.getElementById('save-knight').addEventListener("click",async(e)=>{
+  e.preventDefault();
+  document.querySelectorAll('#zodiac-Knights input').forEach((item)=>{
+    knightObject[item.name]=item.value;
+  });
+  let response = await saveKnight(knightObject,knightId);
+  if(response){
+    printAllKnights('caballeros-list');
+  }
+knightId=null;
+cleanForm();
+
 });
 
-const cleanForm = () => {
-    let inputs = document.querySelectorAll("#pet-form input");
-    inputs.forEach ( item => item.value = "")
+const cleanForm =()=>{
+  let inputs=document.querySelectorAll('#zodiac-Knights input');
+  inputs.forEach(item =>item.value="")
 }
 
-const createPetCard = (petData, petKey) => {
-  let { species, breed, origin, picture } = petData;
-  let cardCol = document.createElement("div");
-  cardCol.classList.add("col");
+
+
+///create card
+
+const createKnightCard=(KnightData,knightkey)=>{
+  let {signo,nombre,orden,tecnica,picture}=KnightData;
+  let cardcol=document.createElement("div");
+  cardcol.classList.add("col");
 
   let cardWrapper = document.createElement("div");
-  cardWrapper.classList.add("pet-card", "card", "mb-3");
-
+  cardWrapper.classList.add("knight-card","card","mb-3");
+  
   let cardRow = document.createElement("div");
-  cardRow.classList.add("row", "g-0");
+  cardRow.classList.add("row","g-0");
 
   let imageCol = document.createElement("div");
   imageCol.classList.add("col-md-4");
 
-  let cardPicture = document.createElement("img");
+  let cardPicture =document.createElement("img");
   cardPicture.classList.add("card-picture");
-  cardPicture.setAttribute("src", picture);
+  cardPicture.setAttribute("src",picture);
 
   let contentCol = document.createElement("div");
   contentCol.classList.add("col-md-4");
@@ -69,103 +79,107 @@ const createPetCard = (petData, petKey) => {
     "justify-content-between"
   );
 
-  let cardTitle = document.createElement("h5");
-  cardTitle.classList.add("card-title");
-  let cardTitleText = document.createTextNode(`${species} ${breed}`);
-  cardTitle.append(cardTitleText);
+  console.log(KnightData);
+let cardTitle = document.createElement("h5");
+cardTitle.classList.add("card-title");
+let cardTitleText = document.createTextNode();
+cardTitle.append(cardTitleText);
 
-  let cardYear = document.createElement("p");
-  cardYear.classList.add("card-text");
-  let yearText = document.createTextNode(origin);
-  cardYear.append(yearText);
 
-  let buttonWrapper = document.createElement("div");
-  buttonWrapper.classList.add(
-    "d-flex",
-    "justify-content-between",
-    "flex-column",
-    "flex-md-row",
-    "gap-3"
-  );
+let cardKnightName =document.createElement("p");
+cardKnightName.classList.add("card-text");
+let knightName = document.createTextNode(nombre);
+cardKnightName.append(knightName);
 
-  let deleteButton = document.createElement("button");
-  deleteButton.classList.add("btn", "btn-danger");
-  let deleteText = document.createTextNode("Borrar");
-  deleteButton.append(deleteText);
-  deleteButton.addEventListener("click", () => {
-    deletePet(petKey);
-  });
 
-  let modifiedButton = document.createElement("button");
-  modifiedButton.classList.add("btn", "btn-primary");
-  let modifiedText = document.createTextNode("Modificar");
-  modifiedButton.append(modifiedText);
-  modifiedButton.addEventListener("click", () => {
-  modifiedPet(petKey);
-  });
+let cardKnightTecnica =document.createElement("p");
+cardKnightTecnica.classList.add("card-textII");
+let knightThecnic = document.createTextNode(tecnica);
+cardKnightTecnica.append(knightThecnic);
 
-  let detailButton = document.createElement("button");
-  detailButton.classList.add("btn", "btn-warning");
-  let detailText = document.createTextNode("Detalle");
-  detailButton.append(detailText);
-  detailButton.addEventListener("click", () => {
-  window.location.replace(`./detailedView.html?petId=${petKey}`);
-  });
+let buttonWrapper =document.createElement("div");
+buttonWrapper.classList.add(
+  "d-flex",
+  "justify-content-between",
+  "flex-column",
+  "flex-md-row",
+  "gap-3"
+);
 
-  buttonWrapper.append(deleteButton, modifiedButton, detailButton);
+let deleteButton =document.createElement("button");
+deleteButton.classList.add("btn","btn-danger");
+let deleteText =document.createTextNode("borrar");
+deleteButton.append(deleteText);
+deleteButton.addEventListener("click",()=>{
+    deleteKnight(knightId);
+});
 
-  cardBody.append(cardTitle, cardYear, buttonWrapper);
+let modifiedButton =document.createElement("button");
+modifiedButton.classList.add("btn","btn-primary");
+let modifiedText =document.createTextNode("Modificar");
+modifiedButton.append(modifiedText);
+modifiedButton.addEventListener("click",()=>{
+modifiedKnight(knightId);
 
-  contentCol.append(cardBody);
+});
 
-  imageCol.append(cardPicture);
+///aqui va el detalle
 
-  cardRow.append(imageCol, contentCol);
+////////////////////
 
-  cardWrapper.append(cardRow);
+console.log(cardTitle);
 
-  cardCol.append(cardWrapper);
+buttonWrapper.append(deleteButton,modifiedButton);
+cardBody.append(cardTitle,cardKnightName,cardKnightTecnica,buttonWrapper);
+contentCol.append(cardBody);
+imageCol.append(cardPicture);
+cardRow.append(imageCol,contentCol);
+cardWrapper.append(cardRow);
+cardcol.append(cardWrapper);
+return cardcol;
 
-  return cardCol;
 };
 
-const getAllPets = async () => {
-  let response = await fetch(`${BASE_URL}/pets/.json`);
+
+const getAllKnights =async ()=>{
+  let response= await fetch(`${BASE_URL}/.json`);
   let data = await response.json();
   return data;
 };
 
-const printAllPets = async (listId) => {
-  let pets = await getAllPets();
-  console.log(pets);
-  let listWrapper = document.getElementById(listId);
-  while (listWrapper.firstChild) {
+const printAllKnights =async (listId)=>{
+  let knoghts =await getAllKnights();
+  console.log(knoghts);
+
+  let listWrapper =document.getElementById(listId);
+  while(listWrapper.firstChild){
     listWrapper.removeChild(listWrapper.firstChild);
   }
-  for (key in pets) {
-    let petData = pets[key];
-    let card = createPetCard(petData, key);
+  for (key in knoghts ){
+    let knoghtData = knoghts[key];
+    let card=createKnightCard(knoghtData,key);
     listWrapper.appendChild(card);
   }
+
 };
 
-printAllPets("pet-list");
+printAllKnights("caballeros-list");
 
-const deletePet = async (petKey) => {
-  let response = await fetch(`${BASE_URL}/pets/${petKey}/.json`, {
-    method: "DELETE",
+
+const deleteKnight =async (knightkey) =>{
+  let response =await fetch(`${BASE_URL}/${knightkey}/CZ/.json`,{
+    metho:"DELETE",
   });
-  let data = await response.json();
-  printAllPets("pet-list");
+  let data =await response.json();
+  printAllKnights();
+
 };
 
-const modifiedPet = async (petKey) => {
-    petId = petKey;
-    let newResponse = await fetch(`${BASE_URL}/pets/${petKey}/.json`);
-    let dataNew = await newResponse.json();
 
-    let listInput = document.querySelectorAll("form input")
-    listInput.forEach(item => {
-        item.value = dataNew[item.name]
-    })
-};
+
+
+
+
+
+
+
