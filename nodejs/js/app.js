@@ -2,6 +2,7 @@
 const BASE_URL ='https://caballeroszodiaco-bb6c6-default-rtdb.firebaseio.com';
 //crear el objeto de caballeros y el id
 let knightObject={};
+let knoghts=[];
 let knightId =null;
 
 ///funcionalidades
@@ -9,14 +10,14 @@ let knightId =null;
 ///Save and Edit
 const saveKnight= async (knight,knightId)=>{
   if(knightId){
-    let response = await fetch(`${BASE_URL}/CZ/${knightId}/.json`,{
+    let response = await fetch(`${BASE_URL}/${knightId}/.json`,{
       method:'PUT',
       body:JSON.stringify(knight),
     });
     let data= await response.json();
     return data;
   }else{
-    let response =await fetch(`${BASE_URL}/CZ/.json`,{
+    let response =await fetch(`${BASE_URL}/.json`,{
       method:'POST',
       body:JSON.stringify(knight),
     });
@@ -26,9 +27,9 @@ const saveKnight= async (knight,knightId)=>{
 };
 
 ///Mandar llamar el metodo
-document.getElementById('save-knight').addEventListener("click",async(e)=>{
-  e.preventDefault();
-  document.querySelectorAll('#zodiac-Knights input').forEach((item)=>{
+document.getElementById('save-knight').addEventListener("click",async(event)=>{
+  event.preventDefault();
+  document.querySelectorAll('#zodiac-form input').forEach((item)=>{
     knightObject[item.name]=item.value;
   });
   let response = await saveKnight(knightObject,knightId);
@@ -41,7 +42,7 @@ cleanForm();
 });
 
 const cleanForm =()=>{
-  let inputs=document.querySelectorAll('#zodiac-Knights input');
+  let inputs=document.querySelectorAll('#zodiac-form input');
   inputs.forEach(item =>item.value="")
 }
 
@@ -50,7 +51,7 @@ const cleanForm =()=>{
 ///create card
 
 const createKnightCard=(KnightData,knightkey)=>{
-  let {signo,nombre,orden,tecnica,picture}=KnightData;
+  let {nombre,orden,picture,signo,tecnica}=KnightData;
   let cardcol=document.createElement("div");
   cardcol.classList.add("col");
 
@@ -61,7 +62,7 @@ const createKnightCard=(KnightData,knightkey)=>{
   cardRow.classList.add("row","g-0");
 
   let imageCol = document.createElement("div");
-  imageCol.classList.add("col-md-4");
+  imageCol.classList.add("col-md-6");
 
   let cardPicture =document.createElement("img");
   cardPicture.classList.add("card-picture");
@@ -79,22 +80,28 @@ const createKnightCard=(KnightData,knightkey)=>{
     "justify-content-between"
   );
 
-  console.log(KnightData);
+  
 let cardTitle = document.createElement("h5");
 cardTitle.classList.add("card-title");
-let cardTitleText = document.createTextNode();
+let cardTitleText = document.createTextNode(`Orden: caballero de ${orden}`);
 cardTitle.append(cardTitleText);
 
 
 let cardKnightName =document.createElement("p");
 cardKnightName.classList.add("card-text");
-let knightName = document.createTextNode(nombre);
+let knightName = document.createTextNode(`Nombre: ${nombre}`);
 cardKnightName.append(knightName);
+
+
+let cardKnightsignno =document.createElement("p");
+cardKnightsignno.classList.add("card-text");
+let knightSigno = document.createTextNode(`Signo: ${signo}`);
+cardKnightsignno.append(knightSigno);
 
 
 let cardKnightTecnica =document.createElement("p");
 cardKnightTecnica.classList.add("card-textII");
-let knightThecnic = document.createTextNode(tecnica);
+let knightThecnic = document.createTextNode(`Tecnica :${tecnica} `);
 cardKnightTecnica.append(knightThecnic);
 
 let buttonWrapper =document.createElement("div");
@@ -111,7 +118,7 @@ deleteButton.classList.add("btn","btn-danger");
 let deleteText =document.createTextNode("borrar");
 deleteButton.append(deleteText);
 deleteButton.addEventListener("click",()=>{
-    deleteKnight(knightId);
+    deleteKnight(knightkey);
 });
 
 let modifiedButton =document.createElement("button");
@@ -119,17 +126,24 @@ modifiedButton.classList.add("btn","btn-primary");
 let modifiedText =document.createTextNode("Modificar");
 modifiedButton.append(modifiedText);
 modifiedButton.addEventListener("click",()=>{
-modifiedKnight(knightId);
+modifiedKnight(knightkey);
 
 });
 
 ///aqui va el detalle
+let detailButton = document.createElement("button");
+detailButton.classList.add("btn","btn-warning");
+let ViewDetailText =document.createTextNode("Detalle");
+detailButton.append(ViewDetailText);
+
+detailButton.addEventListener("click",()=>{
+  window.location.replace('./detailedView.html');
+  
+  });
+
 
 ////////////////////
-
-console.log(cardTitle);
-
-buttonWrapper.append(deleteButton,modifiedButton);
+buttonWrapper.append(deleteButton,modifiedButton,detailButton);
 cardBody.append(cardTitle,cardKnightName,cardKnightTecnica,buttonWrapper);
 contentCol.append(cardBody);
 imageCol.append(cardPicture);
@@ -147,10 +161,10 @@ const getAllKnights =async ()=>{
   return data;
 };
 
-const printAllKnights =async (listId)=>{
-  let knoghts =await getAllKnights();
-  console.log(knoghts);
 
+
+const printAllKnights =async (listId)=>{
+   knoghts =await getAllKnights();
   let listWrapper =document.getElementById(listId);
   while(listWrapper.firstChild){
     listWrapper.removeChild(listWrapper.firstChild);
@@ -167,16 +181,39 @@ printAllKnights("caballeros-list");
 
 
 const deleteKnight =async (knightkey) =>{
-  let response =await fetch(`${BASE_URL}/${knightkey}/CZ/.json`,{
-    metho:"DELETE",
+  let response =await fetch(`${BASE_URL}/${knightkey}/.json`,{
+    method:"DELETE",
   });
   let data =await response.json();
-  printAllKnights();
+  printAllKnights("caballeros-list");
 
 };
 
 
+const modifiedKnight =async(knightkey)=>{
+  knightId=knightkey;
+  let newResponse = await fetch(`${BASE_URL}/${knightId}/.json`);
+  let newData = await newResponse.json();
+  let listInput =document.querySelectorAll("form input");
+  listInput.forEach(item=>{
+    item.value=newData[item.name];
+  });
 
+};
+///search knight
+const KnightSearchInput =document.querySelector("[data-search]");
+
+
+
+KnightSearchInput.addEventListener("input",(e)=>{
+  const value = e.target.value.toLowerCase();
+  let knoghtData =null;
+  for (key in knoghts ){
+     knoghtData = knoghts[key];
+  }
+
+
+});
 
 
 

@@ -1,3 +1,27 @@
-.azul{
-    color:rgb(61, 61, 188)
+img, svg {
+    vertical-align: middle;
+    width: 90%;
+    padding-bottom: 4%;
 }
+.card {
+    --bs-card-spacer-y: 1rem;
+    --bs-card-spacer-x: 6rem;
+}
+
+#centralizar{
+    font-size:50;
+    font-weight:bold;
+    text-align: center;
+}
+
+.search-wrapper{
+    display:flex;
+    flex-direction:column;
+    gap:.25rem;
+    width:50%
+}
+
+.filter{
+    display:none;
+}
+/*search de busqueda*/
