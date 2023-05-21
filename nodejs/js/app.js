@@ -94,13 +94,13 @@ cardKnightName.append(knightName);
 
 
 let cardKnightsignno =document.createElement("p");
-cardKnightsignno.classList.add("card-text");
+cardKnightsignno.classList.add("card-textI");
 let knightSigno = document.createTextNode(`Signo: ${signo}`);
 cardKnightsignno.append(knightSigno);
 
 
 let cardKnightTecnica =document.createElement("p");
-cardKnightTecnica.classList.add("card-textII");
+cardKnightTecnica.classList.add("card-textIII");
 let knightThecnic = document.createTextNode(`Tecnica :${tecnica} `);
 cardKnightTecnica.append(knightThecnic);
 
@@ -207,13 +207,28 @@ const KnightSearchInput =document.querySelector("[data-search]");
 
 KnightSearchInput.addEventListener("input",(e)=>{
   const value = e.target.value.toLowerCase();
-  let knoghtData =null;
-  for (key in knoghts ){
-     knoghtData = knoghts[key];
+  const storeItems =document.getElementById('caballeros-list');
+  const product =document.querySelectorAll(".knight-card");
+  const productName =storeItems.getElementsByTagName("h5");
+
+  for(var i=0;i<productName.length;i++){
+    let match=product[i].getElementsByTagName('h5')[0];
+    if(match){
+     let texvalue= match.textContent || match.innerHTML
+     
+        if(texvalue.toLowerCase().indexOf(value)>-1){
+            product[i].style.display="";
+
+        }else{
+          product[i].style.display="none";
+
+        }
+    }
   }
 
 
 });
+
 
 
 
