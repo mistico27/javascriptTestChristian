@@ -46,8 +46,6 @@ const cleanForm =()=>{
   inputs.forEach(item =>item.value="")
 }
 
-
-
 ///create card
 
 const createKnightCard=(KnightData,knightkey)=>{
@@ -62,7 +60,7 @@ const createKnightCard=(KnightData,knightkey)=>{
   cardRow.classList.add("row","g-0");
 
   let imageCol = document.createElement("div");
-  imageCol.classList.add("col-md-6");
+  imageCol.classList.add("card-img-top");
 
   let cardPicture =document.createElement("img");
   cardPicture.classList.add("card-picture");
@@ -177,6 +175,10 @@ const printAllKnights =async (listId)=>{
 
 };
 
+
+
+
+
 printAllKnights("caballeros-list");
 
 
@@ -229,9 +231,31 @@ KnightSearchInput.addEventListener("input",(e)=>{
 
 });
 
+const printSortAllKnights =async (listId)=>{
+ 
+  knoghts =await getAllKnights();
+  const newSortArray =Object.values(knoghts).reverse();
 
+  var JsonObject = JSON.parse(JSON.stringify(newSortArray));
+  console.log(JsonObject);
+ let listWrapper =document.getElementById(listId);
+ while(listWrapper.firstChild){
+   listWrapper.removeChild(listWrapper.firstChild);
+ }
+ for (key in JsonObject ){
+   let knoghtData = JsonObject[key];
+   let card=createKnightCard(knoghtData,key);
+   listWrapper.appendChild(card);
+ }
 
+};
 
+const reverseButton =document.getElementById("find-latest");
+reverseButton.addEventListener('click',(e)=>{
+  e.preventDefault();
+  printSortAllKnights("caballeros-list");
+})
+;
 
 
 

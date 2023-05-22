@@ -4,8 +4,8 @@ img, svg {
     padding-bottom: 4%;
 }
 .card {
-    --bs-card-spacer-y: 1rem;
-    --bs-card-spacer-x: 6rem;
+    
+    width: 18rem;
 }
 
 #centralizar{
