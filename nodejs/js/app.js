@@ -6,24 +6,59 @@ let knoghts=[];
 let knightId =null;
 
 ///funcionalidades
+function showAlert(message,className){
+  const div=document.createElement('div');
+  div.className=`alert alert-${className}`;
+  div.appendChild(document.createTextNode(message));
+  const container =document.querySelector('.container');
+  const form = document.querySelector('#zodiac-form');
+  
+  form.parentNode.insertBefore(div,form);
+
+  ///vanish
+  setTimeout(()=>document.querySelector('.alert').remove(),2500)
+
+}
+//special Characters
+function containsSpecialChars(str) {
+  const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+  return specialChars.test(str);
+}
+
+function containsNumbers(str){
+  const numbers = /[1234567890]/;
+  return numbers.test(str);
+
+}
+
 
 ///Save and Edit
 const saveKnight= async (knight,knightId)=>{
-  if(knightId){
-    let response = await fetch(`${BASE_URL}/${knightId}/.json`,{
-      method:'PUT',
-      body:JSON.stringify(knight),
-    });
-    let data= await response.json();
-    return data;
-  }else{
-    let response =await fetch(`${BASE_URL}/.json`,{
-      method:'POST',
-      body:JSON.stringify(knight),
-    });
-    let data= await response.json();
-    return data;
+  if(knight.nombre ===''|| knight.signo===''||knight.picture===''||knight.orden===''||knight.tecnica===''){
+    showAlert('please fill the form','danger');  
+    } else if(containsSpecialChars(knight.nombre)||containsSpecialChars(knight.signo)||containsSpecialChars(knight.tecnica)||containsSpecialChars(knight.orden)){
+      showAlert('please Do not set special charcateres','danger');
+    }else if(containsNumbers(knight.nombre)||containsNumbers(knight.signo)||containsNumbers(knight.orden)){
+      showAlert('please Do not set numbers','danger');
+    }else{
+  
+    if(knightId){
+      let response = await fetch(`${BASE_URL}/${knightId}/.json`,{
+        method:'PUT',
+        body:JSON.stringify(knight),
+      });
+      let data= await response.json();
+      return data;
+    }else{
+      let response =await fetch(`${BASE_URL}/.json`,{
+        method:'POST',
+        body:JSON.stringify(knight),
+      });
+      let data= await response.json();
+      return data;
+    }
   }
+ 
 };
 
 ///Mandar llamar el metodo
@@ -81,25 +116,25 @@ const createKnightCard=(KnightData,knightkey)=>{
   
 let cardTitle = document.createElement("h5");
 cardTitle.classList.add("card-title");
-let cardTitleText = document.createTextNode(`Orden: caballero de ${orden}`);
+let cardTitleText = document.createTextNode(` ${orden}`);
 cardTitle.append(cardTitleText);
 
 
 let cardKnightName =document.createElement("p");
 cardKnightName.classList.add("card-text");
-let knightName = document.createTextNode(`Nombre: ${nombre}`);
+let knightName = document.createTextNode(` ${nombre}`);
 cardKnightName.append(knightName);
 
 
 let cardKnightsignno =document.createElement("p");
 cardKnightsignno.classList.add("card-textI");
-let knightSigno = document.createTextNode(`Signo: ${signo}`);
+let knightSigno = document.createTextNode(` ${signo}`);
 cardKnightsignno.append(knightSigno);
 
 
 let cardKnightTecnica =document.createElement("p");
 cardKnightTecnica.classList.add("card-textIII");
-let knightThecnic = document.createTextNode(`Tecnica :${tecnica} `);
+let knightThecnic = document.createTextNode(`${tecnica} `);
 cardKnightTecnica.append(knightThecnic);
 
 let buttonWrapper =document.createElement("div");
@@ -254,8 +289,9 @@ const reverseButton =document.getElementById("find-latest");
 reverseButton.addEventListener('click',(e)=>{
   e.preventDefault();
   printSortAllKnights("caballeros-list");
-})
-;
+});
+
+
 
 
 
